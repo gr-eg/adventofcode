@@ -6,5 +6,13 @@ def react(input)
   react(new_input)
 end
 
-input = File.read('input.txt')
-puts react(input).chomp.chars.count
+input = File.read('input.txt').chomp
+puts "Part 1: #{react(input).chars.count}"
+
+polymers = []
+
+input.chars.map(&:downcase).uniq.map do |char|
+  polymers << react(input.gsub(/#{char}/i, '')).chars.count
+end
+
+puts "Part 2: #{polymers.min}"
