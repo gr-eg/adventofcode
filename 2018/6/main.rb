@@ -4,30 +4,25 @@ require 'byebug'
 input = File.readlines('input.txt').map { |x| x.chomp.split(', ').map(&:to_i) }
 
 arr = Array.new(0, [])
-# byebug
 
 edges = []
-# alpha = ('a'..'z').to_a[0...input.count]
-ymax = (input.max_by{ |x| x[0] }[0]) + 1
-xmax = input.max_by{ |x| x[1] }[1]
+ymax = (input.max_by { |x| x[0] }[0]) + 1
+xmax = input.max_by { |x| x[1] }[1]
 
 (0..ymax).each do |y|
   (0..xmax).each do |x|
     arr[x] ||= []
-    index = input.index([y, x])
-    arr[x][y] = [index, 0] if index
-    next if index
 
     input.each do |place|
       distance = (y - place[0]).abs + (x - place[1]).abs
+      letter = input.index(place)
+
       if arr[x][y] && arr[x][y][1].to_i == distance
         arr[x][y] = ['.', distance]
       else
-        letter = input.index(place)
-        # letter = alpha[input.index(place)]
         unless arr[x][y] && arr[x][y][1].to_i < distance
           arr[x][y] = [letter, distance]
-          if x.zero? || y.zero? || x == xmax+1 || y == ymax
+          if x.zero? || y.zero? || x == xmax + 1 || y == ymax
             edges << [letter]
           end
         end
