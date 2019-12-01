@@ -1,4 +1,3 @@
-require 'benchmark'
 lines = File.readlines('input.txt').map(&:to_i)
 
 def calc_required(amount)
