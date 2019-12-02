@@ -50,7 +50,6 @@ class Computer
   end
 
   def reset!
-    # @memory = File.read("input.txt").split(",").map(&:to_i)
     @memory = @original_program.dup
     @pointer = 0
   end
