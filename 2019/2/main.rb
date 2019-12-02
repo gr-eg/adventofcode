@@ -1,23 +1,69 @@
-require 'pry-byebug'
+class Computer
+  HALT = "halt".freeze
 
-lines = File.read('input.txt').split(",").map(&:to_i)
-
-index = 0
-lines[1] = 12
-lines[2] = 2
-
-while lines[index] != 99
-  p1 = lines[index + 1]
-  p2 = lines[index + 2]
-  out = lines[index + 3]
-  case lines[index]
-  when 1
-    res = lines[p1] + lines[p2]
-  when 2
-    res = lines[p1] * lines[p2]
+  def initialize(program)
+    @original_program = File.read(program).split(",").map(&:to_i)
+    @memory = @original_program.dup
+    @pointer = 0
   end
-  lines[out] = res
-  index += 4
+
+  def run(noun, verb)
+    reset!
+    @memory[1] = noun
+    @memory[2] = verb
+    loop do
+      res = run_instruction
+      break if res == HALT
+      @memory[out] = res
+      @pointer += 4
+    end
+    @memory[0]
+  end
+
+  private
+
+  def run_instruction
+    case instruction
+    when 1
+      @memory[p1] + @memory[p2]
+    when 2
+      @memory[p1] * @memory[p2]
+    when 99
+      HALT
+    end
+  end
+
+  def instruction
+    @memory[@pointer]
+  end
+
+  def p1
+    @memory[@pointer + 1]
+  end
+
+  def p2
+    @memory[@pointer + 2]
+  end
+
+  def out
+    @memory[@pointer + 3]
+  end
+
+  def reset!
+    # @memory = File.read("input.txt").split(",").map(&:to_i)
+    @memory = @original_program.dup
+    @pointer = 0
+  end
 end
 
-puts lines[0]
+comp = Computer.new('input.txt')
+
+puts "Part 1: #{comp.run(12, 2)}"
+
+[*(0..99)].product([*(0..99)]).each do |x|
+  res = comp.run(x[0], x[1])
+  if res == 19690720
+    puts "Part 2: #{100 * x[0] + x[1]}"
+    break
+  end
+end
