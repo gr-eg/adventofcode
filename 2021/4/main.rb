@@ -70,11 +70,9 @@ class Board
   private
 
   def columns
-    c = []
-    5.times do |i|
-      c << Line.new(rows.map { |x| x[i] })
+    (0..4).map do |i|
+      Line.new(rows.map { |x| x[i] })
     end
-    c
   end
 end
 
